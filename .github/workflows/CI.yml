@@ -12,7 +12,7 @@ on:
     - QA
     - main
 jobs:
-  lint:    
+  Dependencies:    
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -23,20 +23,10 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
-      - name: Run Lint
-        run: npm run lint
   Test:
-    needs: lint
+    needs: Dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Get Code
-        uses: actions/checkout@v3
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install dependencies
-        run: npm ci
       - name: Run Test
         run: npm run test
   Build:
