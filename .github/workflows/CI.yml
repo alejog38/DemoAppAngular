@@ -1,0 +1,50 @@
+name: Build Project CI
+on: 
+  push:
+    branches: 
+    - release/*
+    - feature/*
+    - team/*
+  pull_request:
+    branches: 
+    - develop
+    - QA
+    - main
+jobs:
+  lint:    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Lint
+        run: npm run lint
+  Test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Test
+        run: npm run test
+  Build:
+    needs: test    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Project
+        run: npm run build
+      - name: Build Docker Container  
+        run: docker build .
+
+        
